@@ -2,7 +2,7 @@ const express = require("express");
 require("dotenv").config();
 const jwt = require("express-jwt");
 const jwksRsa = require("jwks-rsa");
-
+const checkScope = require("express-jwt-authz");
 
 //setup JWT
 const checkJwt = jwt({
@@ -34,6 +34,16 @@ app.get("/private", checkJwt, function(req, res) {
         message: "Hello from a private API!"
     });
 });
+
+app.get("/course", checkJwt, checkScope(["read:courses"]), function(req, res) {
+    res.json({
+        courses: [
+            { id: 1, title: "Building Apps w/React" },
+            { id: 2, title: "Creating Reusable React Components" }
+        ]
+    });
+});
+
 
 app.listen(3001);
 console.log("API server listening on " + process.env.REACT_APP_API_URL);
