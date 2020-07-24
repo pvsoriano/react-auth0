@@ -25,6 +25,7 @@ export default class Auth {
             if (authResult && authResult.accessToken && authResult.idToken) {
                 this.setSession(authResult);
                 this.history.push("/");
+                console.log("Parsing...");
             } else if (err) {
                 this.history.push("/");
                 alert(`Error: ${err.error}. Check console for further details.`);
