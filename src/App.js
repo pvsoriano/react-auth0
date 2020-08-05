@@ -12,9 +12,22 @@ import Courses from "./Courses";
 class App extends Component {
     constructor(props) {
         super(props);
-        this.auth = new Auth(this.props.history);
+        this.state = {
+            auth: new Auth(this.props.history),
+            tokenRenewalComplete: false
+        };
     }
+
+    componentDidMount() {
+        this.state.auth.renewToken(() =>
+            this.setState({ tokenRenewalComplete: true })
+        );
+    }
+
     render() {
+        const { auth } = this.state
+        // Show loading message until the token renewal check is completed.
+        if (!this.state.tokenRenewalComplete) return "Loading...";
         return (
             <>
                 <NavBar auth={this.auth} />
